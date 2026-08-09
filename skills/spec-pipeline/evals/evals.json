@@ -1,0 +1,23 @@
+{
+  "skill_name": "spec-pipeline",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "给 /api/upload 端点加限流：每用户每分钟最多 20 次上传，超限返回 429。先出方案再动手。",
+      "expected_output": "TASK.md 包含 refined prompt / research / grill Q&A / spec（含 VERIFY 块）四段；research 通过 subagent 完成；spec 有实现步骤和可运行的 VERIFY 命令",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "task-plan: 重构登录模块，把 JWT 校验抽成独立中间件，兼容现有测试",
+      "expected_output": "先向用户提问澄清（grill 阶段），获得回答后产出 spec；spec 有 Files to touch 和 VERIFY 命令；实现后运行 VERIFY 证明 PASS",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "task-auto: 读 PLAN.md 把这个功能拆成任务清单逐个实现（跨多个文件的 feature）",
+      "expected_output": "先分解为有序 todo 清单（blockedBy 表达依赖），逐个任务跑完整流水线，前一个 VERIFY 通过后才开始下一个",
+      "files": []
+    }
+  ]
+}
