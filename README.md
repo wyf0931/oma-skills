@@ -20,8 +20,15 @@ we primarily support. Ports to other agents are planned but not yet shipped.
 | Skill | Claude | Codex | OpenCode | **Pi** | OpenClaw | Hermes Agent |
 | ----- | :----: | :----: | :------: | :----: | :------: | :-----------: |
 | spec-pipeline | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ |
+| skill-creator | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ |
 
 > ✅ = adapted & tested · ❌ = not yet adapted
+>
+> **skill-creator** is a Pi-native port of Anthropic's
+> [skill-creator](https://github.com/anthropics/skills/tree/main/skills/skill-creator). The
+> Claude Code–specific bits (`claude -p`, `.claude/commands` injection, Skill/Read tool
+> detection) are replaced with Pi equivalents (`pi -p --skill --mode json` + `read`-tool
+> detection).
 
 ## Skills
 
@@ -43,6 +50,26 @@ refine → research → grill → compose → critique → implement → verify 
 
 **Triggers:** complex/multi-step requests, "先出方案 / 先写 spec / 规划一下", plan-before-code,
 feature decomposition.
+
+### [skill-creator](skills/skill-creator/)
+
+Create, evaluate, and iterate on skills — a full creation loop with quantitative benchmarking:
+
+```
+capture intent → draft SKILL.md → test cases → dual-track runs → grade → benchmark → human review → iterate → description optimization
+```
+
+- Dual-track testing: each eval runs with-skill and baseline (without-skill) in parallel via
+  `subagent`, so the benchmark measures real skill value
+- Quantitative evals with assertions, `benchmark.json` aggregation (pass rate / time / tokens),
+  and a browser viewer (`eval-viewer/generate_review.py`) for human review
+- Pi-native trigger testing: `scripts/run_eval.py` drives `pi -p --skill <path> --mode json` and
+  detects `read`-tool calls on the SKILL.md — no `.claude/commands` injection
+- Description optimization loop (`scripts/run_loop.py`) with train/test holdout to prevent
+  overfitting
+
+**Triggers:** creating/building/improving skills, skill evals, benchmarking, description
+optimization.
 
 ## Install
 
