@@ -9,6 +9,8 @@
 
 </div>
 
+> **Languages:** [English](README.md) · [中文](README.zh-CN.md)
+
 Reusable, prompt-first workflows distilled from production usage. Each skill turns a proven
 multi-step process into a deterministic, verifiable pipeline your agent can follow.
 
