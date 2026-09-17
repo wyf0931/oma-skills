@@ -1,0 +1,26 @@
+[
+  {
+    "query": "我们在做 AI 创业团队，想先研究并定义一个 HR Director / Organization Architect agent。请从公开资料、不同公司岗位描述和实践经验中提炼职责、权限、工具、协作边界，最后给我可部署的 role package 和 skill。",
+    "should_trigger": true
+  },
+  {
+    "query": "把医疗器械法规负责人的工作蒸馏成一个专业 agent：要覆盖行业标准、不同市场的 JD、真实合规流程和失败案例；研究过程中让子代理并行找证据，并保留每项规则的来源和置信度。",
+    "should_trigger": true
+  },
+  {
+    "query": "我们要搭一个虚拟组织。帮我基于这些 30 份 customer-success leader 的面试记录和 JD，先形成职责树让我删减，再产出这个岗位的决策规则、交接关系、所需 MCP 和评测用例。",
+    "should_trigger": true
+  },
+  {
+    "query": "Write a job description for a senior HR director in Shenzhen. It should attract candidates experienced in SaaS recruiting and compensation.",
+    "should_trigger": false
+  },
+  {
+    "query": "HR Director 一般负责哪些事情？给我一个简短的说明，方便我在会议上介绍这个职位。",
+    "should_trigger": false
+  },
+  {
+    "query": "阅读这份已有的 agent role package，检查 YAML 是否有效并修正格式错误，不需要做外部研究。",
+    "should_trigger": false
+  }
+]

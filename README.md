@@ -23,6 +23,8 @@ we primarily support. Ports to other agents are planned but not yet shipped.
 | ----- | :----: | :----: | :------: | :----: | :------: | :-----------: |
 | spec-pipeline | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ |
 | skill-creator | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ |
+| evidence-role-distillation | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ |
+| content-operations-expert | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ |
 
 > ✅ = adapted & tested · ❌ = not yet adapted
 >
@@ -72,6 +74,38 @@ capture intent → draft SKILL.md → test cases → dual-track runs → grade �
 
 **Triggers:** creating/building/improving skills, skill evals, benchmarking, description
 optimization.
+
+### [evidence-role-distillation](skills/evidence-role-distillation/)
+
+Research and compile a real-world role into an evidence-backed Agent Role Package and deployable
+skill. It keeps theory, job-market evidence, practitioner know-how, artifacts, and counterexamples
+separate; uses coding and gap-driven sampling to form a role tree; then asks the user to prune and
+shape that public model for their organization.
+
+```
+role contract → evidence loop → candidate role model → HITL shaping → role package → skill + evals
+```
+
+- Tracks long research with goals and phase tasks when available
+- Delegates independent evidence lanes to subagents while keeping final synthesis with the lead
+  agent, preventing raw research from polluting the main context
+- Produces traceable responsibility, authority, boundary, handoff, tool, memory, and evaluation
+  definitions—not merely a persona prompt
+- Uses evidence confidence levels and saturation criteria instead of equating a fixed number of
+  sources with quality
+
+**Triggers:** designing an agent role, virtual-organization position, domain expert skill, role
+boundary, capability model, or evidence-backed job model from research materials.
+
+### [content-operations-expert](skills/content-operations-expert/)
+
+Operate the delivery system around already-approved text-and-image content across Xiaohongshu, WeChat
+Official Accounts, Zhihu, and approved new channels. It creates platform packages, readiness gates,
+publisher handoffs, community-response operations, feedback/experiment loops, and dated platform-rule
+monitoring without absorbing editorial strategy or unapproved account actions.
+
+**Triggers:** multi-platform content packaging, release readiness, content calendars, feedback and
+experiment operations, community-response routing, or platform-rule monitoring.
 
 ## Install
 
