@@ -23,6 +23,7 @@
 | ---- | :----: | :----: | :------: | :----: | :------: | :-----------: |
 | spec-pipeline | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ |
 | skill-creator | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ |
+| style-maker | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ |
 
 > ✅ = 已适配并测试 · ❌ = 尚未适配
 >
@@ -68,6 +69,21 @@ refine → research → grill → compose → critique → implement → verify 
 - 描述优化循环（`scripts/run_loop.py`）带训练/测试留出集，防止过拟合
 
 **触发词：** 创建/构建/改进技能、技能评估、基准测试、描述优化。
+
+### [style-maker](skills/style-maker/)
+
+将一批 Markdown 文章蒸馏成可复用的内容与表达 Skill。它分离内容规则和表达规则，提取标题体系，并为公众号、生活方式、个人经验、非虚构和文化观察文章提供带原文证据的叙事风格分析。
+
+```text
+采集语料 → 元数据 → 内容/风格/标题蒸馏 → 可复用 Skill 包
+```
+
+- `policy` Profile 用于政策、公文、工作部署、报告、调研和新闻通讯
+- `narrative` Profile 用于公众号长文和生活方式文章，包含七维叙事规则与原文证据
+- 内置 CLI，支持只采集或完整蒸馏，输出可打包的 `sources/process/skill` bundle
+- 优先使用 Agent 原生 web fetch；本地采集 endpoint 仅为可选后备
+
+**触发词：** 蒸馏文章语料、提取团队写作风格、创建写作 Style Spec、统一长文编辑表达，或将政策/叙事范文变成可复用 Skill。
 
 ## 安装
 
