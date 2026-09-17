@@ -1,8 +1,0 @@
-.env
-.venv/
-dist/
-__pycache__/
-.pytest_cache/
-*.py[cod]
-skills/*/
-!skills/.gitkeep

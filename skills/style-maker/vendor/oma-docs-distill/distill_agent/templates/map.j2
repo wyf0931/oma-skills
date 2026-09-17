@@ -1,7 +1,0 @@
-分析文档 {{ doc_id }}，返回：
-{"metadata":{"article_type":"文体","topic_tags":["主题标签"],"hook_type":"开头类型","structure_pattern":"结构类型","source_types":["素材来源类型"]},"content_profile":{"theme":"文章核心主题和对象","abstract":"文章摘要","claims":["事实/判断/推断及其边界"],"causal_chain":["因果或机制链"],"narrative_order":["叙事或论证推进顺序"],"source_types":["事实来源类型"]},"style_profile":{"opening":["开头方式"],"structure":["结构模式"],"paragraph":["段落承载方式"],"language":["句长、词汇、抽象程度"],"rhetoric":["修辞偏好"],"rhythm":["节奏"],"ending":["收尾方式"]}{% if profile.narrative_dimensions %},"narrative_style":{"story_material":{"pattern":"素材取舍规律","evidence":["原文短片段"]},"structure":{"pattern":"叙事结构规律","evidence":["原文短片段"]},"emotion":{"pattern":"情绪设计规律","evidence":["原文短片段"]},"pace":{"pattern":"节奏规律","evidence":["原文短片段"]},"tension":{"pattern":"钩子与张力规律","evidence":["原文短片段"]},"restraint":{"pattern":"留白与克制规律","evidence":["原文短片段"]},"narrator":{"pattern":"叙述者视角规律","evidence":["原文短片段"]}}{% endif %},"title_analysis":{"document_title":"总标题","title_type":"文体/标题类型","subtitle":"副标题或引题","sections":[{"level":1,"title":"一级标题","function":"本节功能","topic":"本节主题","logic_relation":"与前后标题的并列/递进/因果关系"}]},"structures":["段落/全文结构范式"],"tone_style":["语气、站位、语态特征"],"terms":["领域术语或稳定表达"],"few_shots":[{"before":"抽象化原文","after":"规范化示例"}]}
-profile：{{ profile.name }}。观察重点：{{ profile.map_focus }} 内容规则：{{ profile.content_rules }} 风格规则：{{ profile.style_rules }}
-元数据：{{ metadata | json_cn }}
-本地统计的高频词供参考：{{ top_words | json_cn }}
-材料：
-{{ content }}
