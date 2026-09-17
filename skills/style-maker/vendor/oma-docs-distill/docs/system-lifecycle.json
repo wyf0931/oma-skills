@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "diagram_type": "lifecycle",
+  "meta": {
+    "title": "多文档 Skill 蒸馏 Agent：当前生命周期",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "viewBox": [1280, 900]
+  },
+  "lanes": [
+    {"id": "main", "label": "主流程"},
+    {"id": "data", "label": "Dataset"},
+    {"id": "model", "label": "SenseNova + LangGraph"},
+    {"id": "terminal", "label": "Skill Output"}
+  ],
+  "states": [
+    {"id": "start", "type": "start", "label": "启动 distill-agent", "lane": "main", "col": 0},
+    {"id": "input", "type": "decision", "label": "识别输入类型", "sublabel": "Markdown 目录 / URL 清单", "lane": "main", "col": 1},
+    {"id": "fetch", "type": "active", "label": "串行抓取 URL", "sublabel": "缓存复用 · 最多重试 3 次", "lane": "data", "col": 2},
+    {"id": "load", "type": "active", "label": "加载 Markdown", "sublabel": "读取文档单元", "lane": "data", "col": 2},
+    {"id": "bootstrap", "type": "active", "label": "构建动态词典", "sublabel": "N-gram → LLM 审校 → Jieba", "lane": "model", "col": 3},
+    {"id": "map", "type": "active", "label": "Map：单篇逆向蒸馏", "sublabel": "实体清洗 · 结构 · 风格 · 术语", "lane": "model", "col": 4},
+    {"id": "reduce", "type": "active", "label": "Reduce：全局融合", "sublabel": "生成 Skill 内容对象", "lane": "model", "col": 4, "yOffset": 100},
+    {"id": "write", "type": "active", "label": "写入 Skill 包", "sublabel": "frontmatter · skill.json · references", "lane": "output", "col": 4},
+    {"id": "done", "type": "success", "label": "完成", "sublabel": "skills/<name>/", "lane": "output", "col": 4, "yOffset": 200},
+    {"id": "failure", "type": "failure", "label": "单项失败", "sublabel": "记录错误并继续 / 全部失败则终止", "lane": "data", "col": 2, "yOffset": 180}
+  ],
+  "transitions": [
+    {"id": "t1", "from": "start", "to": "input", "label": "解析参数"},
+    {"id": "t2", "from": "input", "to": "fetch", "label": "URL 清单"},
+    {"id": "t3", "from": "input", "to": "load", "label": "Markdown 目录"},
+    {"id": "t4", "from": "fetch", "to": "load", "label": "生成 / 复用 dataset"},
+    {"id": "t5", "from": "load", "to": "bootstrap", "label": "候选词提取"},
+    {"id": "t6", "from": "bootstrap", "to": "map", "label": "Send 并行分发"},
+    {"id": "t7", "from": "map", "to": "reduce", "label": "汇聚 Map 结果"},
+    {"id": "t8", "from": "reduce", "to": "write", "label": "结构化内容"},
+    {"id": "t9", "from": "write", "to": "done", "label": "原子写入"},
+    {"id": "t10", "from": "fetch", "to": "failure", "label": "重试后仍失败", "variant": "dashed"},
+    {"id": "t11", "from": "failure", "to": "load", "label": "继续剩余文档", "variant": "dashed"}
+  ]
+}

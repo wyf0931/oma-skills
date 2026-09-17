@@ -25,6 +25,7 @@ we primarily support. Ports to other agents are planned but not yet shipped.
 | skill-creator | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ |
 | evidence-role-distillation | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ |
 | content-operations-expert | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ |
+| style-maker | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ |
 
 > ✅ = adapted & tested · ❌ = not yet adapted
 >
@@ -106,6 +107,28 @@ monitoring without absorbing editorial strategy or unapproved account actions.
 
 **Triggers:** multi-platform content packaging, release readiness, content calendars, feedback and
 experiment operations, community-response routing, or platform-rule monitoring.
+
+### [style-maker](skills/style-maker/)
+
+Distill a corpus of Markdown articles into a reusable content-and-style Skill. It separates content
+rules from expression rules, extracts title systems, and supports evidence-backed narrative style
+analysis for public-account, lifestyle, personal-experience, non-fiction, and cultural-observation
+writing.
+
+```text
+collect corpus → metadata → content/style/title distillation → reusable Skill package
+```
+
+- `policy` profile for policy documents, work plans, reports, research, and news communications
+- `narrative` profile for long-form public-account and lifestyle writing, with seven narrative
+  dimensions and source evidence
+- Bundled CLI for collection-only or full distillation, emitting a portable `sources/process/skill`
+  run bundle
+- Uses agent-native web fetch first; local collection endpoint is only an optional fallback
+
+**Triggers:** distilling article corpora, extracting a team writing style, creating a writing style
+spec, standardizing long-form editorial voice, or turning policy/narrative samples into a reusable
+Skill.
 
 ## Install
 
