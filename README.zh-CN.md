@@ -24,6 +24,7 @@
 | spec-pipeline | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ |
 | skill-creator | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ |
 | style-maker | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ |
+| efficient-expression | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ |
 
 > ✅ = 已适配并测试 · ❌ = 尚未适配
 >
@@ -84,6 +85,21 @@ refine → research → grill → compose → critique → implement → verify 
 - 优先使用 Agent 原生 web fetch；本地采集 endpoint 仅为可选后备
 
 **触发词：** 蒸馏文章语料、提取团队写作风格、创建写作 Style Spec、统一长文编辑表达，或将政策/叙事范文变成可复用 Skill。
+
+### [efficient-expression](skills/efficient-expression/)
+
+场景驱动的高效表达流水线。不是从零写文案，而是让每个请求都过一遍三层 SOP — 事实清洗、叙事逻辑、语言渲染 — 并裁掉场景不需要的层：
+
+```text
+Step 0 事实核验（Deep Research / HITL） → Step 1 事实层 → Step 2 叙事层 → Step 3 渲染层
+```
+
+- 场景决策矩阵把高管汇报路由到 PROACT + BLUF，技术选型路由到 IPO + PROACT，产品发布路由到 Golden Circle + ELI5，跨团队摩擦路由到 SCQA + NVC
+- 缺少公域事实时触发 Deep Research 检索补齐；缺少内部背景时触发 HITL，最多提 3 个定量问题，而不是编造数字
+- 动态裁剪规则让一条钉钉回复不会被写成一份汇报信
+- 内置四份参考矩阵与六个端到端实战案例（高管决策汇报、产品发布、跨团队冲突、绩效复盘、内部技术分享、线上事故复盘）
+
+**触发词：** 周报/汇报、向上级请示或要资源、方案选型汇报、产品发布文案、复盘与绩效沟通、技术分享、故障复盘与事故通告、跨团队冲突消息，以及任何“这话怎么跟老板说 / 怎么讲给业务方听”的请求。
 
 ## 安装
 

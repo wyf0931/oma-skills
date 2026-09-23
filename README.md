@@ -24,6 +24,7 @@ we primarily support. Ports to other agents are planned but not yet shipped.
 | spec-pipeline | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ |
 | skill-creator | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ |
 | style-maker | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ |
+| efficient-expression | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ |
 
 > ✅ = adapted & tested · ❌ = not yet adapted
 >
@@ -95,6 +96,30 @@ collect corpus → metadata → content/style/title distillation → reusable Sk
 **Triggers:** distilling article corpora, extracting a team writing style, creating a writing style
 spec, standardizing long-form editorial voice, or turning policy/narrative samples into a reusable
 Skill.
+
+### [efficient-expression](skills/efficient-expression/)
+
+Scenario-driven communication pipeline. Instead of writing from scratch, it runs every request
+through a three-layer SOP — fact hygiene, narrative logic, language rendering — and trims away the
+layers a scenario doesn't need:
+
+```text
+Step 0 fact-check (Deep Research / HITL)  →  Step 1 facts  →  Step 2 narrative  →  Step 3 rendering
+```
+
+- A scenario decision matrix routes executive reports to PROACT + BLUF, architecture choices to
+  IPO + PROACT, product launches to Golden Circle + ELI5, and cross-team friction to SCQA + NVC
+- Missing public facts trigger Deep Research; missing internal context triggers a HITL ask of at
+  most three quantitative questions instead of fabricated numbers
+- Dynamic bypass rules keep a 3-line Slack reply from turning into a report
+- Ships four reference matrices and six worked end-to-end cases: executive decision memo,
+  product launch, cross-team conflict, performance review, internal tech talk, and incident
+  postmortem
+
+**Triggers:** weekly reports, executive updates, budget/approval asks, architecture selection
+memos, product launch copy, retros and performance conversations, tech talks, incident postmortems,
+cross-team conflict messages, and any “how do I say this to my boss / to the business team”
+request.
 
 ## Install
 
