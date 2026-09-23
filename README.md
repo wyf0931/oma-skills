@@ -21,10 +21,12 @@ we primarily support. Ports to other agents are planned but not yet shipped.
 
 | Skill | Claude | Codex | OpenCode | **Pi** | OpenClaw | Hermes Agent |
 | ----- | :----: | :----: | :------: | :----: | :------: | :-----------: |
+| design-to-daisyui | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ |
 | spec-pipeline | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ |
 | skill-creator | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ |
 | style-maker | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ |
 | efficient-expression | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ |
+| website-to-design-md | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ |
 
 > ✅ = adapted & tested · ❌ = not yet adapted
 >
@@ -35,6 +37,32 @@ we primarily support. Ports to other agents are planned but not yet shipped.
 > detection).
 
 ## Skills
+
+### [design-to-daisyui](skills/design-to-daisyui/)
+
+Convert a `DESIGN.md` design system into a daisyUI 5 custom theme CSS file. This
+is the downstream half of the extraction pipeline — `website-to-design-md`
+produces the tokens, this skill turns them into a copy-paste
+`@plugin "daisyui/theme"` block plus a `:root` extension block.
+
+```text
+DESIGN.md → tokens → daisyUI theme CSS → <html data-theme="…">
+```
+
+- Zero-dependency bundled script (`scripts/design-to-daisyui.mjs`, Node 18+) —
+  uses `Bun.YAML` under Bun and a minimal built-in frontmatter parser elsewhere
+- Deliberate resolution order so status colours are never mistaken for brand
+  colours: primary → surface roles → semantic roles → secondary / accent
+- WCAG-based `*-content` derivation when `DESIGN.md` omits explicit `on-*` tokens
+- Hue inference fills missing semantic slots from leftover saturated colours
+  (green→success, amber→warning, red→error, cyan→info)
+- Everything that cannot map to a daisyUI variable is preserved under `:root`
+  with `--color-*` / `--font-family-*` / `--spacing-*` prefixes so Tailwind v4
+  surfaces them as utilities
+
+**Triggers:** "DESIGN.md to daisyUI", "design tokens to theme", "export design
+tokens", "generate theme CSS", "daisyui custom theme", or a request to use
+daisyUI components with an existing design system described in `DESIGN.md`.
 
 ### [spec-pipeline](skills/spec-pipeline/)
 
@@ -120,6 +148,34 @@ Step 0 fact-check (Deep Research / HITL)  →  Step 1 facts  →  Step 2 narrati
 memos, product launch copy, retros and performance conversations, tech talks, incident postmortems,
 cross-team conflict messages, and any “how do I say this to my boss / to the business team”
 request.
+
+### [website-to-design-md](skills/website-to-design-md/)
+
+Reverse-engineer a live website into a validated `DESIGN.md` design system using
+Chrome DevTools MCP (or Playwright). The upstream half of the pipeline — produces
+a specification, not a theme or framework config.
+
+```text
+navigate → snapshot → extract tokens → extract primitives → analyse → write → lint
+```
+
+- Ships five self-contained extraction scripts (`extract-css-variables`,
+  `extract-palette`, `extract-typography`, `extract-components`,
+  `extract-layout`) as `evaluate_script` payloads — the site's own token names
+  become the spine of the document
+- Cluster-first analysis: collapse alpha variants, sort the type scale by role,
+  find the spacing base unit, describe the shape language and depth strategy
+- Strict linter discipline — structural findings (`broken-ref`, duplicate
+  headings, `redundant-omission`) are fixed, design findings (`contrast-ratio`,
+  `orphaned-tokens`) are kept and reported as faithful observations
+- Full constraint reference (`references/design-md-constraints.md`) plus a
+  pitfalls catalogue (`references/pitfalls.md`) covering the 50KB MCP output
+  ceiling and workspace-root write blocks
+
+**Triggers:** "extract design md", "reverse-engineer this site's design",
+"capture the design system from this URL", "what colours/fonts does this site
+use", "turn this website into a DESIGN.md", or a request for palette / type
+scale / spacing / component documentation from a live page.
 
 ## Install
 

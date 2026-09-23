@@ -21,10 +21,12 @@
 
 | 技能 | Claude | Codex | OpenCode | **Pi** | OpenClaw | Hermes Agent |
 | ---- | :----: | :----: | :------: | :----: | :------: | :-----------: |
+| design-to-daisyui | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ |
 | spec-pipeline | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ |
 | skill-creator | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ |
 | style-maker | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ |
 | efficient-expression | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ |
+| website-to-design-md | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ |
 
 > ✅ = 已适配并测试 · ❌ = 尚未适配
 >
@@ -34,6 +36,27 @@
 > Skill/Read 工具检测）被替换为 Pi 等价实现（`pi -p --skill --mode json` + `read` 工具检测）。
 
 ## 技能
+
+### [design-to-daisyui](skills/design-to-daisyui/)
+
+将 `DESIGN.md` 设计系统转换为 daisyUI 5 自定义主题 CSS 文件。这是提取流水线的下游环节 —
+`website-to-design-md` 产出 token，本技能将其转化为可直接复制的
+`@plugin "daisyui/theme"` 代码块以及 `:root` 扩展块。
+
+```text
+DESIGN.md → tokens → daisyUI theme CSS → <html data-theme="…">
+```
+
+- 零依赖内置脚本（`scripts/design-to-daisyui.mjs`，Node 18+）—
+  在 Bun 下使用 `Bun.YAML`，其他环境下使用内置的极简 frontmatter 解析器
+- 有意的解析顺序，避免将状态色误认为品牌色：primary → 表面角色 → 语义角色 → secondary / accent
+- 当 `DESIGN.md` 缺少显式的 `on-*` token 时，基于 WCAG 推导 `*-content` 色值
+- 色相推断从剩余的饱和色中填充缺失的语义槽位（绿→success，琥珀→warning，红→error，青→info）
+- 所有无法映射到 daisyUI 变量的内容均保留在 `:root` 中，
+  使用 `--color-*` / `--font-family-*` / `--spacing-*` 前缀以便 Tailwind v4 作为 utility 暴露
+
+**触发词：** "DESIGN.md to daisyUI"、"design tokens to theme"、"export design
+tokens"、"generate theme CSS"、"daisyui custom theme"，或请求在已有 `DESIGN.md` 设计系统上使用 daisyUI 组件。
 
 ### [spec-pipeline](skills/spec-pipeline/)
 
@@ -100,6 +123,29 @@ Step 0 事实核验（Deep Research / HITL） → Step 1 事实层 → Step 2 �
 - 内置四份参考矩阵与六个端到端实战案例（高管决策汇报、产品发布、跨团队冲突、绩效复盘、内部技术分享、线上事故复盘）
 
 **触发词：** 周报/汇报、向上级请示或要资源、方案选型汇报、产品发布文案、复盘与绩效沟通、技术分享、故障复盘与事故通告、跨团队冲突消息，以及任何“这话怎么跟老板说 / 怎么讲给业务方听”的请求。
+
+### [website-to-design-md](skills/website-to-design-md/)
+
+使用 Chrome DevTools MCP（或 Playwright）将线上网站逆向为经过验证的 `DESIGN.md` 设计系统。
+这是流水线的上游环节 — 产出的是规范文档，而非主题或框架配置。
+
+```text
+navigate → snapshot → extract tokens → extract primitives → analyse → write → lint
+```
+
+- 提供五个自包含的提取脚本（`extract-css-variables`、`extract-palette`、
+  `extract-typography`、`extract-components`、`extract-layout`）作为 `evaluate_script` 载荷 —
+  网站自身的 token 名称成为文档的骨架
+- 聚类优先分析：合并 alpha 变体，按角色排序字阶，找出间距基准单位，描述形状语言与深度策略
+- 严格的 linter 规范 — 结构性问题（`broken-ref`、重复标题、`redundant-omission`）需修复，
+  设计问题（`contrast-ratio`、`orphaned-tokens`）则作为忠实观察保留并报告
+- 完整的约束参考（`references/design-md-constraints.md`）以及涵盖 50KB MCP 输出上限和
+  workspace 根目录写入限制的陷阱目录（`references/pitfalls.md`）
+
+**触发词：** "extract design md"、"reverse-engineer this site's design"、
+"capture the design system from this URL"、"what colours/fonts does this site
+use"、"turn this website into a DESIGN.md"，或请求从线上页面提取调色板 / 字阶 /
+间距 / 组件文档。
 
 ## 安装
 
