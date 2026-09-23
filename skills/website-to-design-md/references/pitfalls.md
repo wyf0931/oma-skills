@@ -105,6 +105,37 @@ Watch for repeated namespaces that mean the same thing — a site may carry both
 `--acme-web-color-primary` and `--legacy-color-primary`. Prefer the namespace
 that appears on the live root scope.
 
+## Declared values are not rendered values
+
+This one is easy to get badly wrong, and the failure mode is silent: you produce
+a confident document describing a design that does not exist.
+
+A stylesheet declares **every** token a framework ships, including the ones the
+site overrides and the ones nothing references. Read declarations alone and you
+will faithfully transcribe another project's defaults. A real example: a console
+built on a component library declared `colorTextTertiary: #717171`, a leftover
+library default. Rendered text used `rgba(20, 21, 28, 0.24)` instead — `#717171`
+appeared **zero** times on the page. A second: the most common declared
+"surface" value was `#000000`, the fill of a dark hero panel, while 37 of the
+page's large surfaces were white.
+
+**Use declarations for vocabulary, computed styles for truth.**
+
+| Question | Source |
+|---|---|
+| What are this system's colour *roles*? (`primary`, `text-tertiary`, `bg-elevated`) | Declared variables — the names state intent |
+| What value does each role *actually resolve to* here? | Computed styles on rendered elements |
+| Which declared tokens are dead (overridden or unreferenced)? | Frequency in the computed-style census |
+
+So the workflow is: harvest names and namespaces from the stylesheets, then
+**confirm every value against the rendered census** before writing it down. A
+token that appears in the declaration list but never in the frequency-ranked
+computed values is a dead token — either drop it or note it as unused.
+
+This is also why frequency ordering matters so much. The head of a
+frequency-sorted list is what the design actually is; a value that renders twice
+is a one-off, however official its name sounds.
+
 ## Pure black is a default, not a design decision
 
 When ranking text colours by frequency, `rgb(0, 0, 0)` will top the list on

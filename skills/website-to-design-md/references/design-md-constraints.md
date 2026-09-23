@@ -74,7 +74,6 @@ is not parsed as a section. Present sections must appear in this order:
 Sections may be omitted when irrelevant — but if you omit `colors`, `typography`,
 `spacing`, `rounded`, or `components` while the design clearly has them, the
 linter flags the omission. Declare genuine omissions explicitly:
-
 ```yaml
 omitted:
   - section: rounded
@@ -85,6 +84,23 @@ Do not list a section in `omitted` **and** define its tokens — that is a
 `redundant-omission` warning.
 
 Duplicate `##` headings are fatal: the file is rejected.
+
+## Beyond the canonical sections
+
+The eight canonical sections are the spine, not the whole vocabulary. The format
+accepts any additional `##` heading — unknown sections are preserved rather than
+rejected — so categories the spec does not standardise still belong in the
+document:
+
+- **Motion** — durations grouped by role, and the easing curves quoted verbatim.
+- **Iconography** — stroke weight, corner treatment, grid size.
+- **Imagery** — art direction, aspect ratios, treatment.
+- **Theming** — what changes between light and dark, and what does not.
+
+Give these prose only (they have no standard token group) and place them after
+the canonical sections rather than interleaved, so the normative order stays
+intact. A design's motion is often its most distinctive trait, so omitting it
+leaves real character on the table.
 
 ## Token naming
 

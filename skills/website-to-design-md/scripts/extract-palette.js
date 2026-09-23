@@ -1,14 +1,15 @@
 () => {
   // Census of every visual primitive in use on the page: colors, font
   // families/sizes/weights, line heights, letter spacings, radii, paddings,
-  // margins, gaps, border widths, and background images.
+  // margins, gaps, border widths, and background images — plus a component
+  // density count so you know the shape of the surface.
   //
   // Everything is deduplicated at the source so the payload stays small — this
   // is the single most important defence against the 50KB MCP output limit.
   // Values are sorted by frequency, so the head of each list is the core system
   // and the tail is almost always one-off noise.
   //
-  // Returns: { elementCount, colors: [{value,count}], fontFamilies: [...], ... }
+  // Returns: { elementCount, density, colors: [{value,count}], fontFamilies: [...], ... }
 
   const MAX_PER_LIST = 60;
   const MAX_DEEP = 40;
@@ -66,6 +67,29 @@
     if (cs.backgroundImage !== 'none') bump(bgImages, cs.backgroundImage.slice(0, 160));
   }
 
+  // Component density: how many of each role actually appear on the surface.
+  // This is the cheapest way to convey the shape of a UI — "button-heavy
+  // marketing grid" reads very differently from "form-heavy console" — and it
+  // is impossible to recover from tokens alone. Each selector list returns a
+  // de-duplicated set, so an <svg> inside a .icon wrapper counts once.
+  const count = (sel) => document.querySelectorAll(sel).length;
+  const density = {
+    buttons: count('button, [role="button"], input[type="submit"], input[type="button"], .btn'),
+    links: count('a[href]'),
+    inputs: count('input:not([type="hidden"]), textarea, select'),
+    forms: count('form'),
+    headings: count('h1, h2, h3, h4, h5, h6'),
+    images: count('img, picture, video, canvas'),
+    icons: count('svg, i[class*="icon"], [class*="icon"]'),
+    lists: count('ul, ol'),
+    listItems: count('li'),
+    tables: count('table'),
+    badges: count('[class*="badge"], [class*="tag"], [class*="chip"], [class*="pill"]'),
+    codeBlocks: count('pre, code'),
+    navLandmarks: count('nav, [role="navigation"]'),
+    dialogs: count('[role="dialog"], dialog, [class*="modal"]'),
+  };
+
   const ranked = (map, cap = MAX_PER_LIST) =>
     [...map.entries()]
       .sort((a, b) => b[1] - a[1])
@@ -74,6 +98,7 @@
 
   return {
     elementCount: els.length,
+    density,
     colors: ranked(colors),
     colorCount: colors.size,
     fontFamilies: ranked(fonts, 12),

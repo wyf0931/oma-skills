@@ -156,13 +156,25 @@ Chrome DevTools MCP (or Playwright). The upstream half of the pipeline — produ
 a specification, not a theme or framework config.
 
 ```text
-navigate → snapshot → extract tokens → extract primitives → analyse → write → lint
+navigate → snapshot → extract tokens → extract primitives → extract motion
+→ audit accessibility → analyse → write → lint
 ```
 
-- Ships five self-contained extraction scripts (`extract-css-variables`,
+- Ships seven self-contained extraction scripts (`extract-css-variables`,
   `extract-palette`, `extract-typography`, `extract-components`,
-  `extract-layout`) as `evaluate_script` payloads — the site's own token names
-  become the spine of the document
+  `extract-layout`, `extract-motion`, `extract-accessibility`) as
+  `evaluate_script` payloads — the site's own token names become the spine of
+  the document
+- **Declarations for vocabulary, computed styles for truth.** Stylesheets carry
+  every token a framework ships, including ones the site overrides; every value
+  is confirmed against the rendered census before it is written down
+- **Component density** — buttons, links, inputs, cards, nav counts — says what
+  kind of surface this is, which no token list can convey
+- **Motion extraction** — durations grouped by role, easing curves quoted
+  verbatim, keyframes, and whether the site honours `prefers-reduced-motion`
+- **Accessibility audit** — WCAG contrast with real alpha compositing, target
+  sizes against the 24×24 CSS px floor, `:focus-visible` rules including ones
+  that strip the outline, and missing accessible names
 - Cluster-first analysis: collapse alpha variants, sort the type scale by role,
   find the spacing base unit, describe the shape language and depth strategy
 - Strict linter discipline — structural findings (`broken-ref`, duplicate
@@ -170,12 +182,13 @@ navigate → snapshot → extract tokens → extract primitives → analyse → 
   `orphaned-tokens`) are kept and reported as faithful observations
 - Full constraint reference (`references/design-md-constraints.md`) plus a
   pitfalls catalogue (`references/pitfalls.md`) covering the 50KB MCP output
-  ceiling and workspace-root write blocks
+  ceiling, workspace-root write blocks, and declared-not-rendered token traps
 
 **Triggers:** "extract design md", "reverse-engineer this site's design",
 "capture the design system from this URL", "what colours/fonts does this site
 use", "turn this website into a DESIGN.md", or a request for palette / type
-scale / spacing / component documentation from a live page.
+scale / spacing / component / motion / accessibility documentation from a live
+page.
 
 ## Install
 

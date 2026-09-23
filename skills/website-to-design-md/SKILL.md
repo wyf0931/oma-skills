@@ -8,7 +8,8 @@ description: >
   "capture the design system from this URL", "what colours/fonts does this site
   use", "turn this website into a DESIGN.md", or wants a design reference for
   rebuilding a site's look. Also use when asked to analyse a page's palette,
-  type scale, spacing rhythm, or component styles for documentation. Produces a
+  type scale, spacing rhythm, component styles, motion system, or accessibility
+  (contrast, focus visibility, target size) for documentation. Produces a
   complete DESIGN.md (YAML tokens + prose rationale) validated with the
   design.md linter. It does NOT convert a DESIGN.md into a theme or framework
   config — that is a separate downstream concern.
@@ -74,6 +75,13 @@ declared in stylesheets, not inline on the root element.
 If the site has no token system (`tokenCount` near zero), say so in the Overview
 and lean entirely on the computed-style census.
 
+**Declarations give you vocabulary, not truth.** A stylesheet carries every token
+a framework ships — including ones this site overrides and ones nothing
+references. Transcribe declarations alone and you will document another
+project's defaults. Harvest the *names* here, then confirm every *value* against
+the computed-style census in the next step. See "Declared values are not
+rendered values" in `references/pitfalls.md`.
+
 ### 3. Extract the primitives
 
 Run each script as the `function` argument to `evaluate_script`. They are
@@ -81,13 +89,20 @@ self-contained arrow functions; read the file and pass its contents.
 
 | Script | Returns | Feeds |
 | --- | --- | --- |
-| `scripts/extract-palette.js` | Frequency-ranked colours, fonts, sizes, radii, spacing, shadows | Colors, Typography, Shapes, Layout |
+| `scripts/extract-palette.js` | Frequency-ranked colours, fonts, sizes, radii, spacing, shadows, plus component density counts | Colors, Typography, Shapes, Layout |
 | `scripts/extract-typography.js` | Text styles grouped by role with real samples | Typography |
 | `scripts/extract-components.js` | Deduped button / input / surface / badge variants | Components |
 | `scripts/extract-layout.js` | Container widths, nav/sidebar geometry, section rhythm | Layout, Elevation |
+| `scripts/extract-motion.js` | Durations, easing curves, animated properties, keyframes, reduced-motion contract | Motion |
+| `scripts/extract-accessibility.js` | Contrast failures, target sizes, focus-visible rules, accessible names | Accessibility, Do's and Don'ts |
 
 Run them one at a time. If one comes back truncated or suspiciously thin,
 narrow its selector and re-run rather than accepting the gap.
+
+The last two are not optional polish. Motion is where a design's personality
+lives, and the accessibility audit is what turns a Do/Don't list into testable
+claims — "maintain 4.5:1 contrast" is a wish; "these 6 text styles fail" is a
+finding.
 
 ### 4. Analyse before writing
 
@@ -105,6 +120,17 @@ Raw output is a census, not a design system. Do the interpretive work first:
   (12–20px)? Note whether buttons are pills and cards are not.
 - **Note the depth strategy.** Borders-only, soft shadows, or heavy elevation?
   Frequency of `box-shadow` values answers this quickly.
+- **Characterise the motion.** Group durations into a small set (feedback / content /
+  overlay) and quote the easing curves verbatim — the curve is the personality.
+  Check `reducedMotion.declared`: if the site honours it, say so; if not, that is
+  worth recording.
+- **Read the density.** `density` says what kind of surface this is. A page with
+  hundreds of buttons and a handful of inputs is a browsing surface; the reverse
+  is a form surface. Let that shape the Overview.
+- **Take the accessibility findings at face value.** Contrast failures, undersized
+  targets, and removed focus outlines are facts about the site. Report them in
+  Do's and Don'ts as constraints to honour when rebuilding, not as things to
+  silently correct.
 
 ### 5. Write the DESIGN.md
 
@@ -134,6 +160,11 @@ Then split the findings by kind:
 - **Design** (`contrast-ratio`, `orphaned-tokens`) — keep and report them; they
   are faithful observations about the site.
 
+The linter's `contrast-ratio` findings and your own accessibility audit should
+agree. When they disagree, trust the audit: it composites the real alpha ramp and
+the real background, where the linter sees only the two token values you wrote
+down.
+
 Confirm the YAML parses end to end:
 
 ```bash
@@ -153,6 +184,10 @@ Before you call it done:
 - [ ] `lint` reports zero structural findings.
 - [ ] Design findings are recorded, not silently removed.
 - [ ] The Overview names a specific reference, not a list of adjectives.
+- [ ] Motion is documented — durations grouped by role, easing curves quoted.
+- [ ] The accessibility contract is stated: target level, focus-visible
+      requirement, and the concrete failures the audit found.
+- [ ] Component density informed the Overview's description of the surface.
 - [ ] Coverage was sampled: if the page has a dark mode, a mobile layout, or a
       second major surface, say so or extract it.
 

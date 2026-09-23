@@ -130,22 +130,32 @@ Step 0 事实核验（Deep Research / HITL） → Step 1 事实层 → Step 2 �
 这是流水线的上游环节 — 产出的是规范文档，而非主题或框架配置。
 
 ```text
-navigate → snapshot → extract tokens → extract primitives → analyse → write → lint
+navigate → snapshot → extract tokens → extract primitives → extract motion
+→ audit accessibility → analyse → write → lint
 ```
 
-- 提供五个自包含的提取脚本（`extract-css-variables`、`extract-palette`、
-  `extract-typography`、`extract-components`、`extract-layout`）作为 `evaluate_script` 载荷 —
+- 提供七个自包含的提取脚本（`extract-css-variables`、`extract-palette`、
+  `extract-typography`、`extract-components`、`extract-layout`、`extract-motion`、
+  `extract-accessibility`）作为 `evaluate_script` 载荷 —
   网站自身的 token 名称成为文档的骨架
+- **声明值给词汇，计算值给真相。** 样式表里带着框架的全部 token（含本站点已覆盖的），
+  每个值都必须与渲染后的普查结果交叉验证后才能写入文档
+- **组件密度** — 按钮、链接、输入框、卡片、导航的数量，说明这是什么类型的界面，
+  这是任何 token 列表都无法传达的
+- **动效提取** — 按角色归类的时长、原文引用的缓动曲线、keyframes，
+  以及站点是否响应 `prefers-reduced-motion`
+- **可访问性审计** — 带真实 alpha 合成的 WCAG 对比度、对照 24×24 CSS px 下限的目标尺寸、
+  `:focus-visible` 规则（含那些移除焦点的）、以及缺失的可访问名称
 - 聚类优先分析：合并 alpha 变体，按角色排序字阶，找出间距基准单位，描述形状语言与深度策略
 - 严格的 linter 规范 — 结构性问题（`broken-ref`、重复标题、`redundant-omission`）需修复，
   设计问题（`contrast-ratio`、`orphaned-tokens`）则作为忠实观察保留并报告
-- 完整的约束参考（`references/design-md-constraints.md`）以及涵盖 50KB MCP 输出上限和
-  workspace 根目录写入限制的陷阱目录（`references/pitfalls.md`）
+- 完整的约束参考（`references/design-md-constraints.md`）以及涵盖 50KB MCP 输出上限、
+  workspace 根目录写入限制、以及「已声明但未渲染」token 陷阱的陷阱目录（`references/pitfalls.md`）
 
 **触发词：** "extract design md"、"reverse-engineer this site's design"、
 "capture the design system from this URL"、"what colours/fonts does this site
 use"、"turn this website into a DESIGN.md"，或请求从线上页面提取调色板 / 字阶 /
-间距 / 组件文档。
+间距 / 组件 / 动效 / 可访问性文档。
 
 ## 安装
 
